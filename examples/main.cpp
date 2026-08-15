@@ -4,25 +4,20 @@
 #include "regression/linear_regression.h"
 #include <Eigen/Dense>
 #include <iostream>
+#include <unordered_map>
 
 int main() {
-  Eigen::MatrixXd data = mlfs::LoadCSVToEigen(
+  std::unordered_map<std::string, double> col_map = {
+      {"Low", 0.0},
+      {"Medium", 2.0},
+      {"High", 3.0},
+  };
+
+  mlfs::EncoderMap encoder_map = {
+      {"col2", std::make_unique<mlfs::OrdinalEncoder>(col_map)}};
+
+  mlfs::RowMatrixXd data = mlfs::load_csv_to_row_matrix(
       "/home/om/Programming/C++Sandbox/mlfs/examples/test.csv", true);
 
-  int batchSize = 32;
-  int totalRows = data.rows();
-
-  for (int startIdx = 0; startIdx < totalRows; startIdx += batchSize) {
-    int currentBatchSize = std::min(batchSize, totalRows - startIdx);
-
-    // O(1) Zero-copy slice of the dataset
-    mlfs::RowMatrixXd batch = data.middleRows(startIdx, currentBatchSize);
-
-    // Example: Inspect batch dimensions or pass directly to C++ ML APIs
-    std::cout << "Processing Batch [" << startIdx << ".."
-              << (startIdx + currentBatchSize - 1) << "] | " << "Shape: ("
-              << batch.rows() << "x" << batch.cols() << ") | " << std::endl;
-
-    // model.forward(batchDataPtr, currentBatchSize, dataset.cols());
-  }
+  std::cout << data << std::endl;
 }
