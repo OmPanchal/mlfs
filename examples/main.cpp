@@ -1,16 +1,28 @@
+#include "core/data.h"
 #include "core/losses.h"
 #include "core/types.h"
 #include "regression/linear_regression.h"
 #include <Eigen/Dense>
 #include <iostream>
 
-using namespace std;
-
 int main() {
-  mlfs::LinearRegression default_model(5, {.learning_rate = 0.0003});
+  Eigen::MatrixXd data = mlfs::LoadCSVToEigen(
+      "/home/om/Programming/C++Sandbox/mlfs/examples/test.csv", true);
 
-  cout << default_model.getWeights() << "\n\n";
-  cout << default_model.getBias() << "\n\n";
-  cout << default_model.getOpts().learning_rate << "\n\n";
-  cout << default_model.getOpts().batch_size;
+  int batchSize = 32;
+  int totalRows = data.rows();
+
+  for (int startIdx = 0; startIdx < totalRows; startIdx += batchSize) {
+    int currentBatchSize = std::min(batchSize, totalRows - startIdx);
+
+    // O(1) Zero-copy slice of the dataset
+    mlfs::RowMatrixXd batch = data.middleRows(startIdx, currentBatchSize);
+
+    // Example: Inspect batch dimensions or pass directly to C++ ML APIs
+    std::cout << "Processing Batch [" << startIdx << ".."
+              << (startIdx + currentBatchSize - 1) << "] | " << "Shape: ("
+              << batch.rows() << "x" << batch.cols() << ") | " << std::endl;
+
+    // model.forward(batchDataPtr, currentBatchSize, dataset.cols());
+  }
 }
