@@ -31,4 +31,8 @@ struct LinearRegressionOptions {
     }
   }
 };
+
+using RowMatrixXd =
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+
 } // namespace mlfs
