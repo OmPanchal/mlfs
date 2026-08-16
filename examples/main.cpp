@@ -14,12 +14,13 @@ int main() {
       {"High", 3.0},
   };
 
-  mlfs::EncoderMap encoder_map;
-  encoder_map["col2"] = std::make_unique<mlfs::OrdinalEncoder>(cat_map);
+  std::vector<std::string> categories = {"Low", "Medium", "High"};
 
-  mlfs::RowMatrixXd data = mlfs::load_csv_to_row_matrix(
-      "/home/om/Programming/C++Sandbox/mlfs/examples/test.csv", true, ',',
-      encoder_map);
+  mlfs::CSVLoader loader = mlfs::CSVLoader({.separator = ';'});
+  loader.add_encoder("col2", std::make_unique<mlfs::OneHotEncoder>(categories));
+
+  mlfs::RowMatrixXd data = loader.load_csv_to_row_matrix(
+      "/home/om/Programming/C++Sandbox/mlfs/examples/test.csv");
 
   std::cout << data << std::endl;
 }

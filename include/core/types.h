@@ -32,6 +32,11 @@ struct LinearRegressionOptions {
   }
 };
 
+struct CSVLoaderOptions {
+  bool has_header = true;
+  char separator = ',';
+};
+
 using RowMatrixXd =
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
