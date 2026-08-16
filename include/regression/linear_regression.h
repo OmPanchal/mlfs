@@ -9,9 +9,9 @@ class LinearRegression : public Model {
 public:
   /**
    * Initialises the model with the initial options
-   * @param LinearRegressionOptions The option struct
+   * @param options The option struct
    */
-  LinearRegression(int feature_size, LinearRegressionOptions opts_);
+  LinearRegression(int feature_size, LinearRegressionOptions options);
   ~LinearRegression() = default;
 
   void fit(const Eigen::MatrixXd &X, const Eigen::VectorXd &y);
