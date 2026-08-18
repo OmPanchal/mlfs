@@ -31,10 +31,7 @@ public:
    * exist
    */
   OrdinalEncoder(std::unordered_map<std::string, double> category_map,
-                 double fallback = 0.0) {
-    category_map_ = category_map;
-    fallback_ = fallback;
-  };
+                 double fallback = 0.0);
   ~OrdinalEncoder() = default;
 
   /**
@@ -48,17 +45,7 @@ public:
    */
   [[nodiscard]] int transform(const std::vector<std::string> &raw_column,
                               RowMatrixXd &target_matrix,
-                              int column_idx) override {
-
-    for (size_t row = 0; row < raw_column.size(); row++) {
-      // Check if the current item has a map value
-      auto it = category_map_.find(raw_column[row]);
-      target_matrix(row, column_idx) =
-          (it != category_map_.end()) ? it->second : fallback_;
-    }
-    // One column modified
-    return 1;
-  }
+                              int column_idx) override;
 
 private:
   std::unordered_map<std::string, double> category_map_;
@@ -72,11 +59,7 @@ public:
    *
    * @param categories A vector of the different categorires part of the column
    */
-  OneHotEncoder(const std::vector<std::string> categories) {
-    for (size_t i = 0; i < categories.size(); i++) {
-      categories_.insert({categories[i], i});
-    }
-  };
+  OneHotEncoder(const std::vector<std::string> categories);
 
   /**
    * Performs one hot encoding on the provided column using `categories`.
@@ -89,26 +72,13 @@ public:
    */
   [[nodiscard]] int transform(const std::vector<std::string> &raw_column,
                               RowMatrixXd &target_matrix,
-                              int column_idx) override {
-
-    for (size_t row = 0; row < raw_column.size(); row++) {
-      auto it = categories_.find(raw_column[row]);
-      if (it != categories_.end()) {
-        target_matrix(row, column_idx + it->second) = 1.;
-      } else {
-        target_matrix(row, column_idx + categories_.size()) = 1.;
-      }
-    }
-    return categories_.size() + 1;
-  }
+                              int column_idx) override;
 
   /**
    * Returns the number of outputs columns the encoding modifies
    * @return The number of modified columns (including ones added)
    */
-  int get_output_column_count() const override {
-    return categories_.size() + 1;
-  }
+  int get_output_column_count() const override;
 
 private:
   std::unordered_map<std::string, size_t> categories_;

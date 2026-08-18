@@ -14,7 +14,9 @@ add_library(mlfs STATIC
   src/core/losses.cpp
   include/core/utils.h
   include/core/data.h
-  include/core/encoders.h)
+  include/core/encoders.h
+  src/core/encoders.cpp
+  src/core/data.cpp)
 
 include(CTest)
 enable_testing()

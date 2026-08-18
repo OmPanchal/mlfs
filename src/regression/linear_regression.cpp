@@ -31,10 +31,9 @@ void LinearRegression::fit_closed_form(const mlfs::RowMatrixXd &X,
 void LinearRegression::fit_gd(const mlfs::RowMatrixXd &X,
                               const Eigen::VectorXd &Y) {
   const int total_rows = X.rows();
-  std::cout << total_rows << "\n";
 
   for (int epoch = 0; epoch < opts_.epochs; epoch++) {
-    // Testing run for one epoch
+    // Split into batches
     for (int i = 0; i < total_rows; i += opts_.batch_size) {
       int current_batch_size = std::min(opts_.batch_size, total_rows - i);
       RowMatrixXd batch_X = X.middleRows(i, current_batch_size);
@@ -45,11 +44,11 @@ void LinearRegression::fit_gd(const mlfs::RowMatrixXd &X,
       double L = opts_.loss->compute(batch_Y, y);
 
       // Output Loss
-      std::cout << "[" << i << " - " << i + current_batch_size
-                << "] - Loss: " << L << "\n";
+      // std::cout << "[" << i << " - " << i + current_batch_size
+      //           << "] - Loss: " << L << "\n";
 
-      double scale = -2.0 / opts_.batch_size;
       // Calculate gradients
+      double scale = -2.0 / opts_.batch_size;
       Eigen::VectorXd dW = (batch_X.transpose() * (batch_Y - y)) * scale;
       double dB = (batch_Y - y).sum() * scale;
 
@@ -58,7 +57,6 @@ void LinearRegression::fit_gd(const mlfs::RowMatrixXd &X,
       bias_ = bias_ - opts_.learning_rate * dB;
     }
   }
-  std::cout << "W: " << weights_ << ", B: " << bias_ << "\n";
 }
 
 } // namespace mlfs
