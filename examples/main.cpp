@@ -8,19 +8,21 @@
 #include <unordered_map>
 
 int main() {
-  std::unordered_map<std::string, double> cat_map = {
-      {"Low", 0.0},
-      {"Medium", 2.0},
-      {"High", 3.0},
-  };
-
-  std::vector<std::string> categories = {"Low", "Medium", "High"};
-
-  mlfs::CSVLoader loader = mlfs::CSVLoader({.separator = ';'});
-  loader.add_encoder("col2", std::make_unique<mlfs::OneHotEncoder>(categories));
+  mlfs::CSVLoader loader = mlfs::CSVLoader({
+      .separator = ';',
+  });
 
   mlfs::RowMatrixXd data = loader.load_csv_to_row_matrix(
       "/home/om/Programming/C++Sandbox/mlfs/examples/test.csv");
 
-  std::cout << data << std::endl;
+  Eigen::VectorXd targets(11);
+  targets << 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.;
+
+  mlfs::LinearRegression model =
+      mlfs::LinearRegression(1, {
+                                    .learning_rate = 0.01,
+                                    .epochs = 1000,
+                                    .batch_size = 5,
+                                });
+  model.fit(data, targets);
 }
