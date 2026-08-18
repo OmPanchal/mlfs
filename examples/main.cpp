@@ -8,9 +8,7 @@
 #include <unordered_map>
 
 int main() {
-  mlfs::CSVLoader loader = mlfs::CSVLoader({
-      .separator = ';',
-  });
+  mlfs::CSVLoader loader = mlfs::CSVLoader();
 
   mlfs::RowMatrixXd data = loader.load_csv_to_row_matrix(
       "/home/om/Programming/C++Sandbox/mlfs/examples/test.csv");
@@ -19,10 +17,13 @@ int main() {
   targets << 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.;
 
   mlfs::LinearRegression model =
-      mlfs::LinearRegression(1, {
-                                    .learning_rate = 0.01,
-                                    .epochs = 1000,
+      mlfs::LinearRegression(2, {
+                                    .learning_rate = 0.001,
+                                    .epochs = 10000,
                                     .batch_size = 5,
                                 });
   model.fit(data, targets);
+
+  std::cout << "W = " << model.get_weights() << "\n";
+  std::cout << "B= " << model.get_bias() << "\n";
 }

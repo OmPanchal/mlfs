@@ -18,9 +18,11 @@ public:
   Eigen::VectorXd predict(const mlfs::RowMatrixXd &X) const override;
 
   // Getters
-  [[nodiscard]] const Eigen::VectorXd &getWeights() const { return weights_; }
-  [[nodiscard]] const double getBias() const { return bias_; }
-  [[nodiscard]] const LinearRegressionOptions &getOpts() const { return opts_; }
+  [[nodiscard]] const Eigen::VectorXd &get_weights() const { return weights_; }
+  [[nodiscard]] const double get_bias() const { return bias_; }
+  [[nodiscard]] const LinearRegressionOptions &get_opts() const {
+    return opts_;
+  }
 
 private:
   Eigen::VectorXd weights_;
