@@ -8,7 +8,7 @@ namespace mlfs {
  */
 enum SolverType {
   CF, // Closed Form
-  SGD // Stochastic Gradient Descent
+  GD  // Gradient Descent
 };
 
 struct LinearRegressionOptions {
@@ -26,8 +26,9 @@ struct LinearRegressionOptions {
     if (epochs <= 0) {
       throw std::invalid_argument("[Invalid Argument] epochs must be positive");
     }
-    if (batch_size != 1) {
-      throw std::runtime_error("[Not Implemented] Only SGD is supported");
+    if (batch_size < 1) {
+      throw std::invalid_argument(
+          "[Invalid Argument] batch_size must be positive");
     }
   }
 };

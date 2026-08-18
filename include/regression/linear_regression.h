@@ -14,16 +14,16 @@ public:
   LinearRegression(int feature_size, LinearRegressionOptions options);
   ~LinearRegression() = default;
 
-  void fit(const Eigen::MatrixXd &X, const Eigen::VectorXd &y);
-  Eigen::VectorXd predict(const Eigen::MatrixXd &X) const;
+  void fit(const mlfs::RowMatrixXd &X, const Eigen::VectorXd &Y) override;
+  Eigen::VectorXd predict(const mlfs::RowMatrixXd &X) const override;
 
   // Getters
-  [[nodiscard]] const Eigen::MatrixXd &getWeights() const { return weights_; }
-  [[nodiscard]] double getBias() const { return bias_; }
+  [[nodiscard]] const Eigen::VectorXd &getWeights() const { return weights_; }
+  [[nodiscard]] const double getBias() const { return bias_; }
   [[nodiscard]] const LinearRegressionOptions &getOpts() const { return opts_; }
 
 private:
-  Eigen::MatrixXd weights_;
+  Eigen::VectorXd weights_;
   double bias_;
   const LinearRegressionOptions opts_;
 
@@ -32,14 +32,13 @@ private:
    * @param X The features
    * @param Y The target values
    */
-  void fit_closed_form(const Eigen::MatrixXd &X, const Eigen::VectorXd &y);
+  void fit_closed_form(const mlfs::RowMatrixXd &X, const Eigen::VectorXd &Y);
 
   /**
-   * Trains the model on features and targerts using a stochastic gradient
-   * descent approach
+   * Trains the model on features and targerts using a gradient descent
    * @param X The features
    * @param Y The target values
    */
-  void fit_sgd(const Eigen::MatrixXd &X, const Eigen::VectorXd &y);
+  void fit_gd(const mlfs::RowMatrixXd &X, const Eigen::VectorXd &Y);
 };
 } // namespace mlfs
