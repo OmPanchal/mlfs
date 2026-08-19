@@ -18,7 +18,11 @@ LinearRegression::LinearRegression(int feature_size,
 
 void LinearRegression::fit(const mlfs::RowMatrixXd &X,
                            const Eigen::VectorXd &Y) {
-  fit_gd(X, Y);
+  if (opts_.solver == SolverType::GD) {
+    fit_gd(X, Y);
+  } else if (opts_.solver == SolverType::CF) {
+    fit_closed_form(X, Y);
+  }
 }
 
 Eigen::VectorXd LinearRegression::predict(const mlfs::RowMatrixXd &X) const {
@@ -26,7 +30,22 @@ Eigen::VectorXd LinearRegression::predict(const mlfs::RowMatrixXd &X) const {
 }
 
 void LinearRegression::fit_closed_form(const mlfs::RowMatrixXd &X,
-                                       const Eigen::VectorXd &y) {}
+                                       const Eigen::VectorXd &y) {
+  // Pad the right most column with ones
+  RowMatrixXd X_ = X;
+  X_.conservativeResize(X_.rows(), X_.cols() + 1);
+  X_.rightCols(1).setConstant(1.);
+
+  // Check if the inverse is possible or not
+  RowMatrixXd Z = (X_.transpose() * X_);
+  if (Z.determinant() == 0) {
+    throw std::runtime_error(
+        "Closed form solution not possible due to non invertable matrix");
+  } else {
+    bias_ = 0;
+    weights_ = Z.inverse() * X_.transpose() * y;
+  }
+}
 
 void LinearRegression::fit_gd(const mlfs::RowMatrixXd &X,
                               const Eigen::VectorXd &Y) {
@@ -44,8 +63,8 @@ void LinearRegression::fit_gd(const mlfs::RowMatrixXd &X,
       double L = opts_.loss->compute(batch_Y, y);
 
       // Output Loss
-      // std::cout << "[" << i << " - " << i + current_batch_size
-      //           << "] - Loss: " << L << "\n";
+      std::cout << "[" << i << " - " << i + current_batch_size
+                << "] - Loss: " << L << "\n";
 
       // Calculate gradients
       double scale = -2.0 / opts_.batch_size;
