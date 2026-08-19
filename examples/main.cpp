@@ -17,11 +17,10 @@ int main() {
   targets << 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.;
 
   mlfs::LinearRegression model =
-      mlfs::LinearRegression(2, {
-                                    .learning_rate = 0.001,
-                                    .epochs = 10000,
-                                    .batch_size = 5,
-                                });
+      mlfs::LinearRegression(2, {.learning_rate = 0.001,
+                                 .epochs = 10000,
+                                 .batch_size = 5,
+                                 .solver = mlfs::SolverType::CF});
   model.fit(data, targets);
 
   std::cout << "W = " << model.get_weights() << "\n";
