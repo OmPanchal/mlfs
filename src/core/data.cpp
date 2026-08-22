@@ -62,7 +62,9 @@ RowMatrixXd CSVLoader::load_csv_to_row_matrix(const std::string &filepath) {
       matrix_col_idx++;
     }
   }
-
+  // Add a matrix column of ones to avoid copying for the bias
+  matrix.conservativeResize(matrix.rows(), matrix.cols() + 1);
+  matrix.rightCols(1).setConstant(1.);
   return matrix;
 }
 
