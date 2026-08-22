@@ -19,11 +19,11 @@ int main() {
   std::cout << data << "\n\n";
 
   mlfs::LinearRegression model =
-      mlfs::LinearRegression(2, {.learning_rate = 0.001,
-                                 .epochs = 10000,
+      mlfs::LinearRegression(3, {.learning_rate = 0.001,
+                                 .epochs = 100000,
                                  .batch_size = 5,
                                  .solver = mlfs::SolverType::GD,
-                                 .lambda = 0.5,
+                                 .lambda = 0,
                                  .alpha = 0.5});
   model.fit(data, targets);
 
