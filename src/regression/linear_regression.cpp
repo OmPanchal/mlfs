@@ -13,7 +13,6 @@ LinearRegression::LinearRegression(int feature_size,
   opts_.validate();
 
   weights_ = Eigen::VectorXd::Random(feature_size);
-  bias_ = mlfs::uniform<double>(-1., 1.);
 }
 
 void LinearRegression::fit(const mlfs::RowMatrixXd &X,
@@ -26,24 +25,18 @@ void LinearRegression::fit(const mlfs::RowMatrixXd &X,
 }
 
 Eigen::VectorXd LinearRegression::predict(const mlfs::RowMatrixXd &X) const {
-  return ((X * weights_).array() + bias_).matrix();
+  return ((X * weights_).array()).matrix();
 }
 
 void LinearRegression::fit_closed_form(const mlfs::RowMatrixXd &X,
                                        const Eigen::VectorXd &y) {
-  // Pad the right most column with ones
-  RowMatrixXd X_ = X;
-  X_.conservativeResize(X_.rows(), X_.cols() + 1);
-  X_.rightCols(1).setConstant(1.);
-
   // Check if the inverse is possible or not
-  RowMatrixXd Z = (X_.transpose() * X_);
+  RowMatrixXd Z = (X.transpose() * X);
   if (Z.determinant() == 0) {
     throw std::runtime_error(
         "Closed form solution not possible due to non invertable matrix");
   } else {
-    bias_ = 0;
-    weights_ = Z.inverse() * X_.transpose() * y;
+    weights_ = Z.inverse() * X.transpose() * y;
   }
 }
 
@@ -58,22 +51,28 @@ void LinearRegression::fit_gd(const mlfs::RowMatrixXd &X,
       RowMatrixXd batch_X = X.middleRows(i, current_batch_size);
       Eigen::VectorXd batch_Y = Y.middleRows(i, current_batch_size);
 
-      // Make preduction and calculate loss
+      // Make preduction and calculate loss with regularisation losses
       Eigen::VectorXd y = predict(batch_X);
-      double L = opts_.loss->compute(batch_Y, y);
+      double L = opts_.loss->compute(batch_Y, y) +
+                 opts_.lambda * (opts_.alpha * weights_.lpNorm<1>() +
+                                 (1 - opts_.alpha) * weights_.squaredNorm());
 
       // Output Loss
       std::cout << "[" << i << " - " << i + current_batch_size
                 << "] - Loss: " << L << "\n";
 
       // Calculate gradients
-      double scale = -2.0 / opts_.batch_size;
-      Eigen::VectorXd dW = (batch_X.transpose() * (batch_Y - y)) * scale;
-      double dB = (batch_Y - y).sum() * scale;
+      Eigen::VectorXd dW =
+          batch_X.transpose() *
+              opts_.loss->gradient(batch_Y, y, opts_.batch_size) +
+          opts_.lambda *
+              (opts_.alpha *
+               (weights_.cwiseAbs().cwiseProduct(
+                    ((1 / weights_.cwiseSqrt().array()) + 0.00001).matrix()) +
+                (weights_.array() * 2 * (1 - opts_.alpha)).matrix()));
 
       // Update Weights and biases
       weights_ = weights_ - opts_.learning_rate * dW;
-      bias_ = bias_ - opts_.learning_rate * dB;
     }
   }
 }
