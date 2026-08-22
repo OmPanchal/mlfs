@@ -17,6 +17,8 @@ struct LinearRegressionOptions {
   int batch_size = 1;
   std::unique_ptr<Loss> loss = std::make_unique<MSE>();
   SolverType solver = SolverType::CF;
+  double lambda = 0;
+  double alpha = 0;
 
   void validate() const {
     if (learning_rate <= 0.0) {

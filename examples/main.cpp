@@ -16,13 +16,16 @@ int main() {
   Eigen::VectorXd targets(11);
   targets << 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.;
 
+  std::cout << data << "\n\n";
+
   mlfs::LinearRegression model =
       mlfs::LinearRegression(2, {.learning_rate = 0.001,
                                  .epochs = 10000,
                                  .batch_size = 5,
-                                 .solver = mlfs::SolverType::CF});
+                                 .solver = mlfs::SolverType::GD,
+                                 .lambda = 0.5,
+                                 .alpha = 0.5});
   model.fit(data, targets);
 
   std::cout << "W = " << model.get_weights() << "\n";
-  std::cout << "B= " << model.get_bias() << "\n";
 }

@@ -19,14 +19,12 @@ public:
 
   // Getters
   [[nodiscard]] const Eigen::VectorXd &get_weights() const { return weights_; }
-  [[nodiscard]] const double get_bias() const { return bias_; }
   [[nodiscard]] const LinearRegressionOptions &get_opts() const {
     return opts_;
   }
 
 private:
   Eigen::VectorXd weights_;
-  double bias_;
   const LinearRegressionOptions opts_;
 
   /**
