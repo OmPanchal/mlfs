@@ -11,6 +11,9 @@ enum SolverType {
   GD  // Gradient Descent
 };
 
+/**
+ * Linear Regression Options struct
+ */
 struct LinearRegressionOptions {
   double learning_rate = 0.01;
   int epochs = 1000;
@@ -32,14 +35,27 @@ struct LinearRegressionOptions {
       throw std::invalid_argument(
           "[Invalid Argument] batch_size must be positive");
     }
+    if (lambda < 0) {
+      throw std::invalid_argument("[Invalid Argument] lambda must be positive");
+    }
+    if (alpha < 0 || alpha > 1) {
+      throw std::invalid_argument(
+          "[Invalid Argument] alpha must be in the interval [0, 1]");
+    }
   }
 };
 
+/**
+ * CSV Loader Options
+ * */
 struct CSVLoaderOptions {
   bool has_header = true;
   char separator = ',';
 };
 
+/**
+ * The Row Major Matrix type
+ */
 using RowMatrixXd =
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
