@@ -22,9 +22,9 @@ int main() {
       mlfs::LinearRegression(3, {.learning_rate = 0.001,
                                  .epochs = 100000,
                                  .batch_size = 5,
-                                 .solver = mlfs::SolverType::GD,
-                                 .lambda = 0,
-                                 .alpha = 0.5});
+                                 .solver = mlfs::SolverType::CF,
+                                 .lambda = 0.4,
+                                 .alpha = 0});
   model.fit(data, targets);
 
   std::cout << "W = " << model.get_weights() << "\n";
