@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10.0)
 project(mlfs VERSION 0.1.0 LANGUAGES C CXX)
 
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 find_package(Eigen3 REQUIRED)
 find_package(rapidcsv REQUIRED)
 
@@ -15,7 +18,8 @@ add_library(mlfs STATIC
   include/core/data.h
   include/core/encoders.h
   src/core/encoders.cpp
-  src/core/data.cpp)
+  src/core/data.cpp
+  include/core/errors.h)
 
 include(CTest)
 enable_testing()
