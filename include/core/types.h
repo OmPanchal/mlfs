@@ -1,4 +1,5 @@
 #pragma once
+#include "core/errors.h"
 #include "core/losses.h"
 #include <memory>
 
@@ -25,22 +26,19 @@ struct LinearRegressionOptions {
 
   void validate() const {
     if (learning_rate <= 0.0) {
-      throw std::invalid_argument(
-          "[Invalid Argument] learning_rate must be positive");
+      throw std::invalid_argument(NEGATIVE_LEARNING_RATE);
     }
     if (epochs <= 0) {
-      throw std::invalid_argument("[Invalid Argument] epochs must be positive");
+      throw std::invalid_argument(NEGATIVE_EPOCHS);
     }
     if (batch_size < 1) {
-      throw std::invalid_argument(
-          "[Invalid Argument] batch_size must be positive");
+      throw std::invalid_argument(NEGATIVE_BATCH_SIZE);
     }
     if (lambda < 0) {
-      throw std::invalid_argument("[Invalid Argument] lambda must be positive");
+      throw std::invalid_argument(LINEAR_REGRESSION_NEGATIVE_LAMBDA);
     }
     if (alpha < 0 || alpha > 1) {
-      throw std::invalid_argument(
-          "[Invalid Argument] alpha must be in the interval [0, 1]");
+      throw std::invalid_argument(LINEAR_REGRESSION_OUT_OF_RANGE_ALPHA);
     }
   }
 };
