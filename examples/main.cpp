@@ -7,25 +7,4 @@
 #include <iostream>
 #include <unordered_map>
 
-int main() {
-  mlfs::CSVLoader loader = mlfs::CSVLoader();
-
-  mlfs::RowMatrixXd data = loader.load_csv_to_row_matrix(
-      "/home/om/Programming/C++Sandbox/mlfs/examples/test.csv");
-
-  Eigen::VectorXd targets(11);
-  targets << 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.;
-
-  std::cout << data << "\n\n";
-
-  mlfs::LinearRegression model =
-      mlfs::LinearRegression(3, {.learning_rate = 0.001,
-                                 .epochs = 100000,
-                                 .batch_size = 5,
-                                 .solver = mlfs::SolverType::CF,
-                                 .lambda = 0.4,
-                                 .alpha = 0});
-  model.fit(data, targets);
-
-  std::cout << "W = " << model.get_weights() << "\n";
-}
+int main() {}
