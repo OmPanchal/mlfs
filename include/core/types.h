@@ -49,6 +49,7 @@ struct LinearRegressionOptions {
 struct CSVLoaderOptions {
   bool has_header = true;
   char separator = ',';
+  double null_value_fallback = 0;
 };
 
 /**

@@ -9,6 +9,17 @@
 #include <vector>
 
 namespace mlfs {
+void null_to_double(const std::string &p_str, double &p_val,
+                    double fallback_value) {
+  // Added some standard "null" placeholders for now...
+  if (p_str.empty() || p_str == "n/a" || p_str == "N/A" || p_str == "NA" ||
+      p_str == " ") {
+    p_val = fallback_value;
+    return;
+  }
+  // Set the value to the converted double value
+  p_val = std::strtod(p_str.c_str(), nullptr);
+}
 
 void CSVLoader::add_encoder(std::string col_name,
                             std::unique_ptr<Encoder> encoder) {
@@ -54,8 +65,18 @@ RowMatrixXd CSVLoader::load_csv_to_row_matrix(const std::string &filepath) {
 
       matrix_col_idx += cols_written;
     } else {
+
+      // String to double converter that replaces null values in the numeric
+      // cells
+      const double &fallback = opts_.null_value_fallback;
+      auto lambda_null_converter = [fallback](const std::string &p_str,
+                                              double &p_val) {
+        null_to_double(p_str, p_val, fallback);
+      };
+
       // Otherwise parse numeric columns
-      std::vector<double> columnData = doc.GetColumn<double>(doc_col_idx);
+      std::vector<double> columnData =
+          doc.GetColumn<double>(doc_col_idx, lambda_null_converter);
       // Set the respective Eigen Matrix column into the parsed value.
       matrix.col(matrix_col_idx) = Eigen::Map<const Eigen::VectorXd>(
           columnData.data(), columnData.size());

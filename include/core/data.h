@@ -6,6 +6,9 @@
 
 namespace mlfs {
 
+void null_to_double(const std::string &p_str, double &p_val,
+                    double fallback_value);
+
 class CSVLoader {
 public:
   CSVLoader(CSVLoaderOptions options = {}) : opts_(std::move(options)) {}
