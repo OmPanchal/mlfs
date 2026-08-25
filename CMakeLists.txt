@@ -6,13 +6,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Eigen3 REQUIRED)
 find_package(rapidcsv REQUIRED)
+find_package(GTest REQUIRED)
 
 add_library(mlfs STATIC
   include/core/model.h
   include/core/types.h
   include/regression/linear_regression.h
   src/regression/linear_regression.cpp
-  examples/main.cpp
+  src/core/errors.cpp
   include/core/losses.h
   include/core/utils.h
   include/core/data.h
@@ -20,9 +21,6 @@ add_library(mlfs STATIC
   src/core/encoders.cpp
   src/core/data.cpp
   include/core/errors.h)
-
-include(CTest)
-enable_testing()
 
 target_include_directories(mlfs
     PUBLIC
@@ -35,4 +33,11 @@ option(MLFS_BUILD_EXAMPLES "Build mlfs example programs" ON)
 
 if(MLFS_BUILD_EXAMPLES)
     add_subdirectory(examples)
+endif()
+
+option(MLFS_BUILD_TESTS "Build test suite" ON)
+if(MLFS_BUILD_TESTS)
+    include(CTest)
+    enable_testing()
+    add_subdirectory(tests)
 endif()
