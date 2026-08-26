@@ -1,6 +1,6 @@
 find_package(GTest REQUIRED)
 
-add_executable(unit_tests test_main.cpp)
+add_executable(unit_tests test_data.cpp)
 
 target_link_libraries(unit_tests
     PRIVATE
