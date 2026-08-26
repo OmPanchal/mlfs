@@ -7,4 +7,4 @@
 #include <iostream>
 #include <unordered_map>
 
-int main() {}
+int main() { std::cout << "Testing"; }
