@@ -31,7 +31,7 @@ public:
    * exist
    */
   OrdinalEncoder(std::unordered_map<std::string, double> category_map,
-                 double fallback = 0.0);
+                 double fallback = -1.);
   ~OrdinalEncoder() = default;
 
   /**
