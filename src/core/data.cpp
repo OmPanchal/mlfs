@@ -12,8 +12,8 @@ namespace mlfs {
 void null_to_double(const std::string &p_str, double &p_val,
                     double fallback_value) {
   // Added some standard "null" placeholders for now...
-  if (p_str.empty() || p_str == "n/a" || p_str == "N/A" || p_str == "NA" ||
-      p_str == " ") {
+  if (p_str.empty() || p_str == "n/a" || p_str == "N/A" || p_str == "na" ||
+      p_str == "NA" || p_str == " ") {
     p_val = fallback_value;
     return;
   }
