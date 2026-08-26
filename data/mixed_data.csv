@@ -1,0 +1,6 @@
+col1, col2, col3
+1, High, 5,
+23., Low, 5,
+8, Normal, 5,
+-23, High, 5,
+-3.14159, Low, 5
