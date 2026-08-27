@@ -34,7 +34,7 @@ void LinearRegression::fit_closed_form(const mlfs::RowMatrixXd &X,
 
   // Closed form solution does not exist for l1 regularisation
   if (opts_.alpha != 0) {
-    throw std::runtime_error(LINEAR_REGRESSION_NO_SOLUTION);
+    throw std::runtime_error(REGRESSION_NO_SOLUTION);
   }
 
   // Matrix to be inversed
