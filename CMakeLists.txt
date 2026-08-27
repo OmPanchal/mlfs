@@ -20,7 +20,9 @@ add_library(mlfs STATIC
   include/core/encoders.h
   src/core/encoders.cpp
   src/core/data.cpp
-  include/core/errors.h)
+  include/core/errors.h
+  include/regression/polynomial_regression.h
+  src/regression/polynomial_regression.cpp)
 
 target_include_directories(mlfs
     PUBLIC
@@ -32,12 +34,12 @@ target_link_libraries(mlfs PUBLIC Eigen3::Eigen rapidcsv::rapidcsv)
 option(MLFS_BUILD_EXAMPLES "Build mlfs example programs" ON)
 
 if(MLFS_BUILD_EXAMPLES)
-    add_subdirectory(examples)
+  add_subdirectory(examples)
 endif()
 
 option(MLFS_BUILD_TESTS "Build test suite" ON)
 if(MLFS_BUILD_TESTS)
-    include(CTest)
-    enable_testing()
-    add_subdirectory(tests)
+  include(CTest)
+  enable_testing()
+  add_subdirectory(tests)
 endif()
