@@ -2,6 +2,7 @@
 
 #include "core/encoders.h"
 #include "core/types.h"
+#include <iostream>
 #include <memory>
 
 namespace mlfs {
@@ -9,6 +10,47 @@ namespace mlfs {
 void null_to_double(const std::string &p_str, double &p_val,
                     double fallback_value);
 
+/**
+ * Wrapper for the output of the result of the `load_csv_to_row_matrix` method
+ * in the CSVLoader class. Adds a level of abstraction for the data inputted to
+ * the models. And also acts as a scalable interface for any data manipulation
+ * methods that could be added in the future
+ */
+class Dataset {
+public:
+  /** Initialises the wrapper class
+   * @param data A `RowMatrixXd` for the data to be stored in the container
+   */
+  Dataset(RowMatrixXd &data) : data_(data) {}
+
+  /**
+   * Returns the stored data
+   * @return Returns the stored data without the padded ones
+   */
+  [[nodiscard]] const RowMatrixXd &get_data() const { return data_; }
+
+  /**
+   * Returns the stored data
+   * @return Returns the stored data with the padded ones
+   */
+  [[nodiscard]] RowMatrixXd get_raw_data() const {
+    return data_.leftCols(data_.cols() - 1);
+  }
+  /**
+   * ? Could possibly add data processing methods here
+   */
+  friend std::ostream &operator<<(std::ostream &os, const Dataset &d) {
+    os << d.get_raw_data();
+    return os;
+  }
+
+private:
+  RowMatrixXd data_;
+};
+
+/**
+ * The CSV Loader class
+ */
 class CSVLoader {
 public:
   CSVLoader(CSVLoaderOptions options = {}) : opts_(std::move(options)) {}
