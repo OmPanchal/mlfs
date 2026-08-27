@@ -28,7 +28,7 @@ private:
   const LinearRegressionOptions opts_;
 
   /**
-   * Trains the model on features and targerts using a closed form approach
+   * Finds the optimal weights directly using a closed form approach
    * @param X The features
    * @param Y The target values
    */
