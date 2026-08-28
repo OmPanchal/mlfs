@@ -9,6 +9,23 @@
 #include <vector>
 
 namespace mlfs {
+Eigen::VectorXd CSVDataset::extract_column(RowMatrixXd &mat, int col) {
+  // Get the extracted column
+  Eigen::VectorXd extracted_col = mat.col(col);
+
+  Eigen::Index num_cols_to_move = mat.cols() - col - 1;
+  if (num_cols_to_move > 0) {
+    // Shift the right most columns to the column to be extracted one space left
+    // Eval used for safety
+    mat.middleCols(col, num_cols_to_move) =
+        mat.rightCols(num_cols_to_move).eval();
+  }
+
+  // Resize the matrix as it has shrunk
+  mat.conservativeResize(mat.rows(), mat.cols() - 1);
+  return extracted_col;
+}
+
 void null_to_double(const std::string &p_str, double &p_val,
                     double fallback_value) {
   // Added some standard "null" placeholders for now...
@@ -26,7 +43,9 @@ void CSVLoader::add_encoder(std::string col_name,
   encoder_map_[col_name] = std::move(encoder);
 }
 
-RowMatrixXd CSVLoader::load_csv_to_row_matrix(const std::string &filepath) {
+CSVDataset CSVLoader::load_csv_to_row_matrix(const std::string &filepath,
+                                             std::string target_col) {
+
   rapidcsv::LabelParams labelParams = opts_.has_header
                                           ? rapidcsv::LabelParams(0, -1)
                                           : rapidcsv::LabelParams(-1, -1);
@@ -44,16 +63,26 @@ RowMatrixXd CSVLoader::load_csv_to_row_matrix(const std::string &filepath) {
 
   // Handle empty file
   if (num_rows == 0 || num_cols == 0) {
-    return Eigen::MatrixXd(0, 0);
+    RowMatrixXd empty_matrix(0, 0);
+    CSVDataset output(empty_matrix, 0);
+    return output;
   }
   // Allocate appropriate space to the Eigen Matrix
-  RowMatrixXd matrix = RowMatrixXd::Zero(num_rows, matrix_cols);
+  RowMatrixXd matrix = RowMatrixXd::Zero(num_rows, matrix_cols + 1);
+
+  // initial value for the target_col_idx
+  int target_col_idx = -1;
 
   size_t matrix_col_idx = 0;
   for (size_t doc_col_idx = 0; doc_col_idx < num_cols; doc_col_idx++) {
     // see if the column name exists in the
     std::string col_name = doc.GetColumnName(doc_col_idx);
     auto it = encoder_map_.find(col_name);
+
+    // Check if the target column matches the current column
+    if (col_name == target_col) {
+      target_col_idx = doc_col_idx;
+    }
 
     // Check for any column encoders
     if (it != encoder_map_.end()) {
@@ -66,8 +95,7 @@ RowMatrixXd CSVLoader::load_csv_to_row_matrix(const std::string &filepath) {
       matrix_col_idx += cols_written;
     } else {
 
-      // String to double converter that replaces null values in the numeric
-      // cells
+      // String to double converter replaces null values in numeric cells
       const double &fallback = opts_.null_value_fallback;
       auto lambda_null_converter = [fallback](const std::string &p_str,
                                               double &p_val) {
@@ -84,9 +112,16 @@ RowMatrixXd CSVLoader::load_csv_to_row_matrix(const std::string &filepath) {
     }
   }
   // Add a matrix column of ones to avoid copying for the bias
-  matrix.conservativeResize(matrix.rows(), matrix.cols() + 1);
   matrix.rightCols(1).setConstant(1.);
-  return matrix;
+
+  // Make sure that target_col_idx has been set
+  if (target_col_idx == -1) {
+    throw std::invalid_argument(TARGET_COL_IDX_NOT_SET);
+  }
+
+  // Return the loaded data as a CSVDataset
+  CSVDataset output(matrix, target_col_idx);
+  return output;
 }
 
 } // namespace mlfs

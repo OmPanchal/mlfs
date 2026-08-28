@@ -2,6 +2,7 @@
 
 #include "core/encoders.h"
 #include "core/types.h"
+#include <Eigen/Dense>
 #include <iostream>
 #include <memory>
 
@@ -16,36 +17,60 @@ void null_to_double(const std::string &p_str, double &p_val,
  * the models. And also acts as a scalable interface for any data manipulation
  * methods that could be added in the future
  */
-class Dataset {
+class CSVDataset {
 public:
   /** Initialises the wrapper class
-   * @param data A `RowMatrixXd` for the data to be stored in the container
+   * @param data A `RowMatrixXd` for the data to be stored in the container7
+   * @param target_col_idx The zero indexed value of the target column. By
+   * default is -1 to represent that the default column will be the last
+   * value.
    */
-  Dataset(RowMatrixXd &data) : data_(data) {}
-
-  /**
-   * Returns the stored data
-   * @return Returns the stored data without the padded ones
-   */
-  [[nodiscard]] const RowMatrixXd &get_data() const { return data_; }
-
-  /**
-   * Returns the stored data
-   * @return Returns the stored data with the padded ones
-   */
-  [[nodiscard]] RowMatrixXd get_raw_data() const {
-    return data_.leftCols(data_.cols() - 1);
+  CSVDataset(RowMatrixXd data, int target_col_idx)
+      : target_col_idx_(target_col_idx) {
+    features_ = data;
+    target_ = extract_column(features_, target_col_idx);
   }
+
   /**
-   * ? Could possibly add data processing methods here
+   * Returns the stored data
+   * @return The stored data with the padded ones
    */
-  friend std::ostream &operator<<(std::ostream &os, const Dataset &d) {
-    os << d.get_raw_data();
+  [[nodiscard]] const RowMatrixXd &get_raw_features() const {
+    return features_;
+  }
+
+  /**
+   * Returns the target column as a vector
+   * @return The target column
+   */
+  [[nodiscard]] const Eigen::VectorXd &get_target() const { return target_; }
+
+  /**
+   * Returns the stored data
+   * @return The stored data without the padded ones
+   */
+  [[nodiscard]] RowMatrixXd get_features() const {
+    return features_.leftCols(features_.cols() - 1);
+  }
+
+  friend std::ostream &operator<<(std::ostream &os, const CSVDataset &d) {
+    os << d.get_features();
     return os;
   }
 
 private:
-  RowMatrixXd data_;
+  RowMatrixXd features_;
+  Eigen::VectorXd target_;
+  int target_col_idx_;
+
+  /**
+   * Splits the raw data matrix into features and target. The target column is
+   * returned
+   * @param mat The raw data
+   * @param col The column to be extracted
+   * @return The extracted column
+   */
+  static Eigen::VectorXd extract_column(RowMatrixXd &mat, int col);
 };
 
 /**
@@ -69,12 +94,15 @@ public:
    * @param filepath The file path to the CSV file
    * @param has_header True if the file has a header for the column names
    * @param separator The separator used in the provided CSV file
-   * @return A Row Major matrix containing the contents of the file
+   * @return A CSVDataset wrapper containing the contents of the file as a
+   * RowMatrixXd
    */
-  RowMatrixXd load_csv_to_row_matrix(const std::string &filepath);
+  CSVDataset load_csv_to_row_matrix(const std::string &filepath,
+                                    std::string target_col);
 
 private:
   EncoderMap encoder_map_ = {};
   const CSVLoaderOptions opts_;
+  std::string target_col;
 };
 } // namespace mlfs
