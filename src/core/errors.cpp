@@ -31,4 +31,8 @@ std::string POLYNOMIAL_REGRESSION_LINEAR_ORDER =
 
 std::string POLYNOMIAL_REGRESSION_NON_POSITIVE_ORDER =
     "[Invalid Argument] order must be positive.";
+
+std::string TARGET_COL_IDX_NOT_SET =
+    "[Invalid Argument] The target column has not been set, make sure that the "
+    "target column name has been type correctly";
 } // namespace mlfs

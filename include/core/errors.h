@@ -21,4 +21,6 @@ extern std::string REGRESSION_OUT_OF_RANGE_ALPHA;
 extern std::string POLYNOMIAL_REGRESSION_LINEAR_ORDER;
 
 extern std::string POLYNOMIAL_REGRESSION_NON_POSITIVE_ORDER;
+
+extern std::string TARGET_COL_IDX_NOT_SET;
 } // namespace mlfs
