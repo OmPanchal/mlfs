@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/data.h"
 #include "core/model.h"
 #include "core/types.h"
 #include <Eigen/Dense>
@@ -14,7 +15,7 @@ public:
   PolynomialRegression(int feature_size, PolynomialRegressionOptions options);
   ~PolynomialRegression() = default;
 
-  void fit(const mlfs::RowMatrixXd &X, const Eigen::VectorXd &Y) override;
+  void fit(mlfs::CSVDataset &data) override;
   Eigen::VectorXd predict(const mlfs::RowMatrixXd &X) const override;
 
   // Getters

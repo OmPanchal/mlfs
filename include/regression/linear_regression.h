@@ -14,7 +14,7 @@ public:
   LinearRegression(int feature_size, LinearRegressionOptions options);
   ~LinearRegression() = default;
 
-  void fit(const mlfs::RowMatrixXd &X, const Eigen::VectorXd &Y) override;
+  void fit(mlfs::CSVDataset &dataset) override;
   Eigen::VectorXd predict(const mlfs::RowMatrixXd &X) const override;
 
   // Getters

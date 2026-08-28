@@ -16,12 +16,11 @@ LinearRegression::LinearRegression(int feature_size,
   weights_ = Eigen::VectorXd::Random(feature_size);
 }
 
-void LinearRegression::fit(const mlfs::RowMatrixXd &X,
-                           const Eigen::VectorXd &Y) {
+void LinearRegression::fit(mlfs::CSVDataset &dataset) {
   if (opts_.solver == SolverType::GD) {
-    fit_gd(X, Y);
+    fit_gd(dataset.get_raw_features(), dataset.get_target());
   } else if (opts_.solver == SolverType::CF) {
-    fit_closed_form(X, Y);
+    fit_closed_form(dataset.get_raw_features(), dataset.get_target());
   }
 }
 

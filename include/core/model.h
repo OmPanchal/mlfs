@@ -1,4 +1,5 @@
 #pragma once
+#include "core/data.h"
 #include "core/types.h"
 #include <Eigen/Dense>
 
@@ -14,7 +15,7 @@ public:
    * @param X The features
    * @param Y The target values
    */
-  virtual void fit(const mlfs::RowMatrixXd &X, const Eigen::VectorXd &Y) = 0;
+  virtual void fit(mlfs::CSVDataset &dataset) = 0;
 
   /**
    * Makes a prediction based on the feature values provided
