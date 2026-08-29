@@ -81,7 +81,7 @@ CSVDataset CSVLoader::load_csv_to_row_matrix(const std::string &filepath,
 
     // Check if the target column matches the current column
     if (col_name == target_col) {
-      target_col_idx = doc_col_idx;
+      target_col_idx = matrix_col_idx;
     }
 
     // Check for any column encoders
