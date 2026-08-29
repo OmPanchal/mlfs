@@ -1,6 +1,6 @@
-col1, col2, col3
-, High, na,
-23., Low, 5,
-NA, Normal, N/A,
--23, high, n/a,
- , Low, 5
+col1, col2, col3, col4
+, High, na, 12
+23., Low, 5, 12 
+NA, Normal, N/A, 12
+-23, high, n/a, 12
+ , Low, 5, 12

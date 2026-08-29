@@ -1,6 +1,6 @@
-col1, col2
-1, na
-NA, 
-n/a, 3
-N/A, 
-5, 5
+col1, col2, col3
+1, na, 12
+NA, , 12
+n/a, 3, 12
+N/A,, 12
+5, 5, 12

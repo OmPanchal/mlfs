@@ -1,6 +1,6 @@
-col1, col2, col3
-1, High, 5,
-23., Low, 5,
-8, Normal, 5,
--23, High, 5,
--3.14159, Low, 5
+col1, col2, col3, col4
+1, High, 5, 12
+23., Low, 5, 12
+8, Normal, 5, 12
+-23, High, 5, 12
+-3.14159, Low, 5, 12 
