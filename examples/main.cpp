@@ -13,12 +13,12 @@ int main() {
       "/home/om/Programming/C++Sandbox/mlfs/data/numeric_data_2.csv", "col2");
 
   mlfs::LinearRegression model =
-      mlfs::LinearRegression(2, {.learning_rate = 0.01,
-                                 .epochs = 1000,
-                                 .batch_size = 1,
+      mlfs::LinearRegression(2, {.learning_rate = 0.0001,
+                                 .epochs = 100000,
+                                 .batch_size = 7,
                                  .solver = mlfs::SolverType::GD,
                                  .lambda = 0,
-                                 .alpha = 0.5});
+                                 .alpha = 0});
 
   // fit the model on the dataset
   model.fit(data);
