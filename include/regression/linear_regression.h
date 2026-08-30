@@ -9,6 +9,7 @@ class LinearRegression : public Model {
 public:
   /**
    * Initialises the model with the initial options
+   * @param feature_size The feature size of the model input
    * @param options The option struct
    */
   LinearRegression(int feature_size, LinearRegressionOptions options);
