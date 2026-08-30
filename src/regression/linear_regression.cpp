@@ -26,7 +26,7 @@ void LinearRegression::fit(mlfs::CSVDataset &dataset) {
 }
 
 Eigen::VectorXd LinearRegression::predict(const mlfs::RowMatrixXd &X) const {
-  return ((X * weights_).array()).matrix();
+  return X * weights_;
 }
 
 void LinearRegression::fit_closed_form(const mlfs::RowMatrixXd &X,
