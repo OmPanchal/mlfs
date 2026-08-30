@@ -6,13 +6,22 @@
 #include <Eigen/Dense>
 
 namespace mlfs {
+/**
+ * Creates a Vandermonde matrix given a vector of values
+ * @param x The generating vector
+ * @param degree The degree of the final column in the matrix
+ */
+RowMatrixXd create_vandermonde_matrix(RowMatrixXd x, int degree);
+
 class PolynomialRegression : public Model {
 public:
   /**
    * Initialises the model with the initial options
+   * @param feature_size The feature size of the model input
    * @param options The options struct
    */
-  PolynomialRegression(int feature_size, PolynomialRegressionOptions options);
+  PolynomialRegression(int feature_size, int degree,
+                       PolynomialRegressionOptions options);
   ~PolynomialRegression() = default;
 
   void fit(mlfs::CSVDataset &data) override;
@@ -20,13 +29,14 @@ public:
 
   // Getters
   [[nodiscard]] const Eigen::VectorXd &get_weights() const { return weights_; }
-  [[nodiscard]] const LinearRegressionOptions &get_opts() const {
+  [[nodiscard]] const PolynomialRegressionOptions &get_opts() const {
     return opts_;
   }
 
 private:
   Eigen::VectorXd weights_;
-  const LinearRegressionOptions opts_;
+  const int degree_;
+  const PolynomialRegressionOptions opts_;
 
   /**
    * Finds the optimal weights directly using a closed form approach
@@ -41,5 +51,13 @@ private:
    * @param Y The target values
    */
   void fit_gd(const mlfs::RowMatrixXd &X, const Eigen::VectorXd &Y);
+
+  /**
+   * Makes a prediction based on the feature values provided taking the
+   * Vandermonde matrix as a the input
+   * @param X The features
+   * @return The model's predictions
+   */
+  Eigen::VectorXd predict_(const mlfs::RowMatrixXd &X) const;
 };
 } // namespace mlfs
