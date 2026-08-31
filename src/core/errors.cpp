@@ -34,5 +34,8 @@ std::string POLYNOMIAL_REGRESSION_NON_POSITIVE_ORDER =
 
 std::string TARGET_COL_IDX_NOT_SET =
     "[Invalid Argument] The target column has not been set, make sure that the "
-    "target column name has been type correctly";
+    "target column name has been type correctly.";
+
+std::string SOLVER_DOES_NOT_EXIST =
+    "[Invalid Argument] This solver does not exist.";
 } // namespace mlfs

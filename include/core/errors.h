@@ -23,4 +23,6 @@ extern std::string POLYNOMIAL_REGRESSION_LINEAR_ORDER;
 extern std::string POLYNOMIAL_REGRESSION_NON_POSITIVE_ORDER;
 
 extern std::string TARGET_COL_IDX_NOT_SET;
+
+extern std::string SOLVER_DOES_NOT_EXIST;
 } // namespace mlfs

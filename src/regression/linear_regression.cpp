@@ -22,6 +22,8 @@ void LinearRegression::fit(mlfs::CSVDataset &dataset) {
     fit_gd(dataset.get_raw_features(), dataset.get_target());
   } else if (opts_.solver == SolverType::CF) {
     fit_closed_form(dataset.get_raw_features(), dataset.get_target());
+  } else {
+    throw std::invalid_argument(SOLVER_DOES_NOT_EXIST);
   }
 }
 
