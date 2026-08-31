@@ -28,10 +28,27 @@ PolynomialRegression::PolynomialRegression(
   weights_ = Eigen::VectorXd::Random(feature_size + 1);
 }
 
+void PolynomialRegression::fit(mlfs::CSVDataset &data) {
+  RowMatrixXd V_x = create_vandermonde_matrix(data.get_features(), degree_);
+
+  if (opts_.solver == CF) {
+    fit_closed_form(V_x, data.get_target());
+  } else if (opts_.solver == GD) {
+    fit_gd(V_x, data.get_target());
+  } else {
+    throw std::invalid_argument(SOLVER_DOES_NOT_EXIST);
+  }
+}
+
 Eigen::VectorXd
 PolynomialRegression::predict(const mlfs::RowMatrixXd &X) const {
   RowMatrixXd V_x = create_vandermonde_matrix(X, degree_);
   return V_x * weights_;
+}
+
+void PolynomialRegression::fit_gd(const mlfs::RowMatrixXd &X,
+                                  const Eigen::VectorXd &Y) {
+  //
 }
 
 Eigen::VectorXd
