@@ -32,7 +32,7 @@ Eigen::VectorXd LinearRegression::predict(const mlfs::RowMatrixXd &X) const {
 }
 
 void LinearRegression::fit_closed_form(const mlfs::RowMatrixXd &X,
-                                       const Eigen::VectorXd &y) {
+                                       const Eigen::VectorXd &Y) {
 
   // Closed form solution does not exist for l1 regularisation
   if (opts_.alpha != 0) {
@@ -51,7 +51,7 @@ void LinearRegression::fit_closed_form(const mlfs::RowMatrixXd &X,
   if ((Z + R).determinant() == 0) {
     throw std::runtime_error(MATRIX_NOT_INVERTIBLE);
   } else {
-    weights_ = (Z + R).inverse() * X.transpose() * y;
+    weights_ = (Z + R).inverse() * X.transpose() * Y;
   }
 }
 
