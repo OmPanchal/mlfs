@@ -20,8 +20,7 @@ public:
    * @param feature_size The feature size of the model input
    * @param options The options struct
    */
-  PolynomialRegression(int feature_size, int degree,
-                       PolynomialRegressionOptions options);
+  PolynomialRegression(int degree, PolynomialRegressionOptions options);
   ~PolynomialRegression() = default;
 
   void fit(mlfs::CSVDataset &data) override;
