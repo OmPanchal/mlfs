@@ -15,13 +15,13 @@ int main() {
 
   // mlfs::RowMatrixXd features = data.get_features();
   // std::cout << mlfs::create_vandermonde_matrix(features, 5);
-  mlfs::PolynomialRegression model =
-      mlfs::PolynomialRegression(2, {.learning_rate = 0.001,
-                                     .epochs = 100000,
-                                     .batch_size = 7,
-                                     .solver = mlfs::SolverType::CF,
-                                     .lambda = 0,
-                                     .alpha = 0});
+  mlfs::LinearRegression model =
+      mlfs::LinearRegression(1, {.learning_rate = 0.001,
+                                 .epochs = 100000,
+                                 .batch_size = 7,
+                                 .solver = mlfs::SolverType::GD,
+                                 .lambda = 1,
+                                 .alpha = 0.5});
 
   // fit the model on the dataset
   model.fit(data);
