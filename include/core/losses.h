@@ -17,8 +17,8 @@ public:
    * @param Y_pred The model's prediction
    * @return The result of the loss function
    */
-  inline virtual double compute(Eigen::VectorXd &Y,
-                                Eigen::VectorXd &Y_pred) const = 0;
+  inline virtual double compute(const Eigen::VectorXd &Y,
+                                const Eigen::VectorXd &Y_pred) const = 0;
 
   /**
    * Returns the gradient of the loss function
@@ -26,8 +26,8 @@ public:
    * @param Y_pred The model's prediction
    * @return The derivative of the loss funciton with respect to the weights
    */
-  inline virtual RowMatrixXd gradient(Eigen::VectorXd &Y,
-                                      Eigen::VectorXd &Y_pred,
+  inline virtual RowMatrixXd gradient(const Eigen::VectorXd &Y,
+                                      const Eigen::VectorXd &Y_pred,
                                       int batch_size) const = 0;
 };
 
@@ -36,14 +36,14 @@ public:
   MSE() = default;
   ~MSE() = default;
 
-  inline double compute(Eigen::VectorXd &Y,
-                        Eigen::VectorXd &Y_pred) const override {
+  inline double compute(const Eigen::VectorXd &Y,
+                        const Eigen::VectorXd &Y_pred) const override {
     return (Y - Y_pred).squaredNorm() / Y.size();
   };
 
-  inline virtual RowMatrixXd gradient(Eigen::VectorXd &Y,
-                                      Eigen::VectorXd &Y_pred,
-                                      int batch_size) const override {
+  inline RowMatrixXd gradient(const Eigen::VectorXd &Y,
+                              const Eigen::VectorXd &Y_pred,
+                              int batch_size) const override {
     return (-2.0 / batch_size) * (Y - Y_pred);
   };
 };
