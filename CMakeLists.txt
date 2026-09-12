@@ -22,7 +22,8 @@ add_library(mlfs STATIC
   src/core/data.cpp
   include/core/errors.h
   include/regression/polynomial_regression.h
-  src/regression/polynomial_regression.cpp)
+  src/regression/polynomial_regression.cpp
+  include/core/regularisers.h)
 
 target_include_directories(mlfs
     PUBLIC
