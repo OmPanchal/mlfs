@@ -38,4 +38,9 @@ std::string TARGET_COL_IDX_NOT_SET =
 
 std::string SOLVER_DOES_NOT_EXIST =
     "[Invalid Argument] This solver does not exist.";
+
+std::string FEATURE_WEIGHT_SIZE_MISMATCH =
+    "[Error] The feature size and the size of the weights does not match. Make "
+    "sure that the feature size has been set appropriately in the model "
+    "instantiation.";
 } // namespace mlfs
