@@ -68,6 +68,11 @@ void PolynomialRegression::fit_closed_form(const mlfs::RowMatrixXd &X,
     throw std::runtime_error(REGRESSION_NO_SOLUTION);
   }
 
+  // Make sure that the shape of the input and the weights matches
+  if (X.cols() != weights_.rows()) {
+    throw std::runtime_error(FEATURE_WEIGHT_SIZE_MISMATCH);
+  }
+
   // Matrix to be inversed
   RowMatrixXd Z = X.transpose() * X;
   RowMatrixXd R = (opts_.lambda * X.rows() *
@@ -88,8 +93,14 @@ void PolynomialRegression::fit_gd(const mlfs::RowMatrixXd &X,
                                   const Eigen::VectorXd &Y) {
   const int total_rows = X.rows();
 
+  // Make sure that the shape of the input and the weights matches
+  if (X.cols() != weights_.rows()) {
+    throw std::runtime_error(FEATURE_WEIGHT_SIZE_MISMATCH);
+  }
+
   for (size_t epoch = 1; epoch < opts_.epochs + 1; epoch++) {
     for (int i = 0; i < total_rows; i += opts_.batch_size) {
+      // Split the dataset into batches
       int current_batch_size = std::min(opts_.batch_size, total_rows - i);
       RowMatrixXd batch_X = X.middleRows(i, current_batch_size);
       Eigen::VectorXd batch_Y = Y.middleRows(i, current_batch_size);
@@ -99,10 +110,10 @@ void PolynomialRegression::fit_gd(const mlfs::RowMatrixXd &X,
 
       // Calculate loss and regularisation gradients
       Eigen::VectorXd l1_grad =
-          (weights_.array().sign() * opts_.alpha).matrix();
+          opts_.alpha * l1_regulariser->gradient(weights_);
 
       Eigen::VectorXd l2_grad =
-          (weights_.array() * 2 * (1 - opts_.alpha)).matrix();
+          (1 - opts_.alpha) * l2_regulariser->gradient(weights_);
 
       Eigen::VectorXd regularisation_grad = l1_grad + l2_grad;
 

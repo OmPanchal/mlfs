@@ -39,6 +39,11 @@ void LinearRegression::fit_closed_form(const mlfs::RowMatrixXd &X,
     throw std::runtime_error(REGRESSION_NO_SOLUTION);
   }
 
+  // Make sure that the shape of the input and the weights matches
+  if (X.cols() != weights_.rows()) {
+    throw std::runtime_error(FEATURE_WEIGHT_SIZE_MISMATCH);
+  }
+
   // Matrix to be inversed
   RowMatrixXd Z = X.transpose() * X;
   RowMatrixXd R = (opts_.lambda * X.rows() *
@@ -58,32 +63,29 @@ void LinearRegression::fit_closed_form(const mlfs::RowMatrixXd &X,
 void LinearRegression::fit_gd(const mlfs::RowMatrixXd &X,
                               const Eigen::VectorXd &Y) {
   const int total_rows = X.rows();
-  int bar_size = 40;
 
-  std::cout << "\033[?25l";
+  // Make sure that the shape of the input and the weights matches
+  if (X.cols() != weights_.rows()) {
+    throw std::runtime_error(FEATURE_WEIGHT_SIZE_MISMATCH);
+  }
+
   for (int epoch = 1; epoch < opts_.epochs + 1; epoch++) {
-    double avg_loss = 0;
-    int current_batch_size = 0;
-
     // Split into batches
     for (int i = 0; i < total_rows; i += opts_.batch_size) {
       // Split the dataset into batches
-      current_batch_size = std::min(opts_.batch_size, total_rows - i);
+      int current_batch_size = std::min(opts_.batch_size, total_rows - i);
       RowMatrixXd batch_X = X.middleRows(i, current_batch_size);
       Eigen::VectorXd batch_Y = Y.middleRows(i, current_batch_size);
 
       // Make prediction on the batch
       Eigen::VectorXd y = predict(batch_X);
 
-      // Calculate Loss
-      avg_loss += opts_.loss->compute(batch_Y, y);
-
       // Calculate loss and regularisation gradients
       Eigen::VectorXd l1_grad =
-          (weights_.array().sign() * opts_.alpha).matrix();
+          opts_.alpha * l1_regulariser->gradient(weights_);
 
       Eigen::VectorXd l2_grad =
-          (weights_.array() * 2 * (1 - opts_.alpha)).matrix();
+          (1 - opts_.alpha) * l2_regulariser->gradient(weights_);
 
       Eigen::VectorXd regularisation_grad = l1_grad + l2_grad;
 
@@ -98,23 +100,7 @@ void LinearRegression::fit_gd(const mlfs::RowMatrixXd &X,
       // Update Weights and biases
       weights_ = weights_ - opts_.learning_rate * dW;
     }
-
-    // Calculate the average loss
-    avg_loss = avg_loss / current_batch_size;
-
-    // Print out a progress bar
-    double ratio = static_cast<double>(epoch) / opts_.epochs;
-    int progress_size = ratio * bar_size;
-    std::string progress_bar(progress_size, '#');
-    std::string gap(bar_size - progress_size, '-');
-    std::string out = "[" + progress_bar + gap + "] - " +
-                      std::to_string(epoch) + "/" +
-                      std::to_string(opts_.epochs) +
-                      " - loss : " + std::to_string(avg_loss) + "\r";
-    std::cout << out;
   }
-
-  std::cout << "\033[?25h\n\n";
 }
 
 } // namespace mlfs

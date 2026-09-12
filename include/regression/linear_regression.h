@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/model.h"
+#include "core/regularisers.h"
 #include "core/types.h"
 #include <Eigen/Dense>
 
@@ -27,6 +28,10 @@ public:
 private:
   Eigen::VectorXd weights_;
   const LinearRegressionOptions opts_;
+  const std::unique_ptr<NormRegulariser> l1_regulariser =
+      std::make_unique<L1Regulariser>();
+  const std::unique_ptr<NormRegulariser> l2_regulariser =
+      std::make_unique<L2Regulariser>();
 
   /**
    * Finds the optimal weights directly using a closed form approach
