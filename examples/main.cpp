@@ -13,11 +13,11 @@ int main() {
   mlfs::CSVDataset data = loader.load_csv_to_row_matrix(
       "/home/om/Programming/C++Sandbox/mlfs/data/numeric_data_2.csv", "col2");
 
-  // mlfs::RowMatrixXd features = data.get_features();
-  // std::cout << mlfs::create_vandermonde_matrix(features, 5);
+  std::cout << data;
+
   mlfs::LinearRegression model =
-      mlfs::LinearRegression(1, {.learning_rate = 0.001,
-                                 .epochs = 100000,
+      mlfs::LinearRegression(1, {.learning_rate = 0.0001,
+                                 .epochs = 500000,
                                  .batch_size = 7,
                                  .solver = mlfs::SolverType::GD,
                                  .lambda = 1,
@@ -26,5 +26,6 @@ int main() {
   // fit the model on the dataset
   model.fit(data);
 
-  std::cout << "\n" << model.get_weights() << std::endl;
+  std::cout << "\n"
+            << model.get_weights() << " " << model.get_bias() << std::endl;
 }
