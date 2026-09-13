@@ -68,7 +68,7 @@ CSVDataset CSVLoader::load_csv_to_row_matrix(const std::string &filepath,
     return output;
   }
   // Allocate appropriate space to the Eigen Matrix
-  RowMatrixXd matrix = RowMatrixXd::Zero(num_rows, matrix_cols + 1);
+  RowMatrixXd matrix = RowMatrixXd::Zero(num_rows, matrix_cols);
 
   // initial value for the target_col_idx
   int target_col_idx = -1;
@@ -105,14 +105,13 @@ CSVDataset CSVLoader::load_csv_to_row_matrix(const std::string &filepath,
       // Otherwise parse numeric columns
       std::vector<double> columnData =
           doc.GetColumn<double>(doc_col_idx, lambda_null_converter);
+
       // Set the respective Eigen Matrix column into the parsed value.
       matrix.col(matrix_col_idx) = Eigen::Map<const Eigen::VectorXd>(
           columnData.data(), columnData.size());
       matrix_col_idx++;
     }
   }
-  // Add a matrix column of ones to avoid copying for the bias
-  matrix.rightCols(1).setConstant(1.);
 
   // Make sure that target_col_idx has been set
   if (target_col_idx == -1) {

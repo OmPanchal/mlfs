@@ -54,7 +54,7 @@ public:
   }
 
   friend std::ostream &operator<<(std::ostream &os, const CSVDataset &d) {
-    os << d.get_features();
+    os << d.get_raw_features();
     return os;
   }
 
