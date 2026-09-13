@@ -1,5 +1,6 @@
 #include "regression/linear_regression.h"
 #include "core/errors.h"
+#include "core/random.h"
 #include "core/utils.h"
 #include <algorithm>
 #include <cmath>
@@ -14,7 +15,11 @@ LinearRegression::LinearRegression(int feature_size,
     : opts_(std::move(options)) {
   opts_.validate();
 
-  weights_ = Eigen::VectorXd::Random(feature_size + 1);
+  weights_ = Eigen::VectorXd::NullaryExpr(
+      feature_size, []() { return Random::uniform(-1.0, 1.0); });
+  bias_ = Random::uniform(-1.0, 1.0);
+
+  std::cout << "\n\n PARAMS: " << weights_ << " " << bias_ << "\n\n";
 }
 
 void LinearRegression::fit(mlfs::CSVDataset &dataset) {
@@ -28,12 +33,12 @@ void LinearRegression::fit(mlfs::CSVDataset &dataset) {
 }
 
 Eigen::VectorXd LinearRegression::predict(const mlfs::RowMatrixXd &X) const {
-  return X * weights_;
+  return ((X * weights_).array() + bias_).matrix();
 }
 
 void LinearRegression::fit_closed_form(const mlfs::RowMatrixXd &X,
                                        const Eigen::VectorXd &Y) {
-
+  // ? Consider Singular Value Decomposition
   // Closed form solution does not exist for l1 regularisation
   if (opts_.alpha != 0) {
     throw std::runtime_error(REGRESSION_NO_SOLUTION);
@@ -48,9 +53,6 @@ void LinearRegression::fit_closed_form(const mlfs::RowMatrixXd &X,
   RowMatrixXd Z = X.transpose() * X;
   RowMatrixXd R = (opts_.lambda * X.rows() *
                    Eigen::MatrixXd::Identity(weights_.rows(), weights_.rows()));
-  // Make the final diagonal of the regularisation gradient to zero to make it
-  // not affect the bias
-  R(R.rows() - 1, R.cols() - 1) = 0.;
 
   // Check if the inverse is possible or not
   if ((Z + R).determinant() == 0) {
@@ -80,7 +82,7 @@ void LinearRegression::fit_gd(const mlfs::RowMatrixXd &X,
       // Make prediction on the batch
       Eigen::VectorXd y = predict(batch_X);
 
-      // Calculate loss and regularisation gradients
+      // Calculate regularisation gradients
       Eigen::VectorXd l1_grad =
           opts_.alpha * l1_regulariser->gradient(weights_);
 
@@ -89,16 +91,17 @@ void LinearRegression::fit_gd(const mlfs::RowMatrixXd &X,
 
       Eigen::VectorXd regularisation_grad = l1_grad + l2_grad;
 
-      // remove affect of gradient to the bias
-      regularisation_grad(regularisation_grad.size() - 1) = 0.;
-
+      // Calculate weights and biases' gradient
       Eigen::VectorXd dW =
           batch_X.transpose() *
               opts_.loss->gradient(batch_Y, y, batch_Y.rows()) +
           (opts_.lambda * regularisation_grad);
 
+      double dB = opts_.loss->gradient(batch_Y, y, batch_Y.rows()).sum();
+
       // Update Weights and biases
       weights_ = weights_ - opts_.learning_rate * dW;
+      bias_ = bias_ - opts_.learning_rate * dB;
     }
   }
 }

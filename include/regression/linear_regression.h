@@ -24,9 +24,11 @@ public:
   [[nodiscard]] const LinearRegressionOptions &get_opts() const {
     return opts_;
   }
+  [[nodiscard]] const double get_bias() const { return bias_; }
 
 private:
   Eigen::VectorXd weights_;
+  double bias_;
   const LinearRegressionOptions opts_;
   const std::unique_ptr<NormRegulariser> l1_regulariser =
       std::make_unique<L1Regulariser>();
