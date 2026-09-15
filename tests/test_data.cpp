@@ -18,11 +18,10 @@ TEST(DataLoadTest, NumericDataSet) {
           .load_csv_to_row_matrix(
               "/home/om/Programming/C++Sandbox/mlfs/data/numeric_data.csv",
               "col3")
-          .get_raw_features();
+          .get_features();
 
   mlfs::RowMatrixXd output{
-      {1.23, 2., 1.},       {2., 2.12, 1.}, {2., 3., 1.},
-      {123.54, 231.33, 1.}, {5., 5., 1.},
+      {1.23, 2.}, {2., 2.12}, {2., 3.}, {123.54, 231.33}, {5., 5.},
   };
 
   EXPECT_EQ(data, output);
@@ -39,10 +38,10 @@ TEST(DataLoadTest, NullNumericDataSet) {
           .load_csv_to_row_matrix(
               "/home/om/Programming/C++Sandbox/mlfs/data/null_numeric_data.csv",
               "col3")
-          .get_raw_features();
+          .get_features();
 
   mlfs::RowMatrixXd output{
-      {1., 0., 1.}, {0., 0., 1.}, {0., 3., 1.}, {0., 0., 1.}, {5., 5., 1.},
+      {1., 0.}, {0., 0.}, {0., 3.}, {0., 0.}, {5., 5.},
   };
 
   EXPECT_EQ(data, output);
@@ -59,11 +58,10 @@ TEST(DataLoadTest, NullNumericDataSetWithCustomFallback) {
           .load_csv_to_row_matrix(
               "/home/om/Programming/C++Sandbox/mlfs/data/null_numeric_data.csv",
               "col3")
-          .get_raw_features();
+          .get_features();
 
   mlfs::RowMatrixXd output{
-      {1., -4.234, 1.},     {-4.234, -4.234, 1.}, {-4.234, 3., 1.},
-      {-4.234, -4.234, 1.}, {5., 5., 1.},
+      {1., -4.234}, {-4.234, -4.234}, {-4.234, 3.}, {-4.234, -4.234}, {5., 5.},
   };
 
   EXPECT_EQ(data, output);
@@ -88,11 +86,11 @@ TEST(DataLoadTest, MixedDataSetWithOrdinalEncoding) {
           .load_csv_to_row_matrix(
               "/home/om/Programming/C++Sandbox/mlfs/data/mixed_data.csv",
               "col4")
-          .get_raw_features();
+          .get_features();
 
   mlfs::RowMatrixXd output{
-      {1., 1., 5., 1.},   {23., -3, 5., 1.},       {8., 2.5, 5., 1.},
-      {-23., 1., 5., 1.}, {-3.14159, -3., 5., 1.},
+      {1., 1., 5.},   {23., -3, 5.},       {8., 2.5, 5.},
+      {-23., 1., 5.}, {-3.14159, -3., 5.},
   };
 
   EXPECT_EQ(data, output);
@@ -118,11 +116,11 @@ TEST(DataLoadTest, NullMixedDataSetWithOrdinalEncoding) {
           .load_csv_to_row_matrix(
               "/home/om/Programming/C++Sandbox/mlfs/data/null_mixed_data.csv",
               "col4")
-          .get_raw_features();
+          .get_features();
 
   mlfs::RowMatrixXd output{
-      {0., 1., 0., 1.},    {23., -3, 5., 1.},  {0., 2.5, 0., 1.},
-      {-23., -1., 0., 1.}, {-0., -3., 5., 1.},
+      {0., 1., 0.},    {23., -3, 5.},  {0., 2.5, 0.},
+      {-23., -1., 0.}, {-0., -3., 5.},
   };
 
   EXPECT_EQ(data, output);
@@ -149,11 +147,11 @@ TEST(DataLoadTest, NullMixedDataSetWithOrdinalEncodingWithCustomFallback) {
           .load_csv_to_row_matrix(
               "/home/om/Programming/C++Sandbox/mlfs/data/null_mixed_data.csv",
               "col4")
-          .get_raw_features();
+          .get_features();
 
   mlfs::RowMatrixXd output{
-      {0., 1., 0., 1.},     {23., -3, 5., 1.},  {0., 2.5, 0., 1.},
-      {-23., 12.2, 0., 1.}, {-0., -3., 5., 1.},
+      {0., 1., 0.},     {23., -3, 5.},  {0., 2.5, 0.},
+      {-23., 12.2, 0.}, {-0., -3., 5.},
   };
 
   EXPECT_EQ(data, output);
@@ -174,12 +172,12 @@ TEST(DataLoadTest, MixedDataSetWithOneHotEncoding) {
           .load_csv_to_row_matrix(
               "/home/om/Programming/C++Sandbox/mlfs/data/mixed_data.csv",
               "col4")
-          .get_raw_features();
+          .get_features();
 
   mlfs::RowMatrixXd output{
-      {1., 0., 0., 1., 0., 5., 1.},       {23., 1., 0., 0., 0., 5., 1.},
-      {8., 0., 1., 0., 0., 5., 1.},       {-23., 0., 0., 1., 0., 5., 1.},
-      {-3.14159, 1., 0., 0., 0., 5., 1.},
+      {1., 0., 0., 1., 0., 5.},       {23., 1., 0., 0., 0., 5.},
+      {8., 0., 1., 0., 0., 5.},       {-23., 0., 0., 1., 0., 5.},
+      {-3.14159, 1., 0., 0., 0., 5.},
   };
 
   EXPECT_EQ(data, output);
@@ -203,12 +201,12 @@ TEST(DataLoadTest, NullMixedDataSetWithOneHotEncoding) {
           .load_csv_to_row_matrix(
               "/home/om/Programming/C++Sandbox/mlfs/data/null_mixed_data.csv",
               "col4")
-          .get_raw_features();
+          .get_features();
 
   mlfs::RowMatrixXd output{
-      {0., 0., 0., 1., 0., 0., 1.}, {23., 1., 0., 0., 0., 5., 1.},
-      {0., 0., 1., 0., 0., 0., 1.}, {-23., 0., 0., 0., 1., 0., 1.},
-      {0, 1., 0., 0., 0., 5., 1.},
+      {0., 0., 0., 1., 0., 0.}, {23., 1., 0., 0., 0., 5.},
+      {0., 0., 1., 0., 0., 0.}, {-23., 0., 0., 0., 1., 0.},
+      {0, 1., 0., 0., 0., 5.},
   };
 
   EXPECT_EQ(data, output);
