@@ -15,17 +15,16 @@ int main() {
 
   std::cout << data;
 
-  mlfs::LinearRegression model =
-      mlfs::LinearRegression(1, {.learning_rate = 0.0001,
-                                 .epochs = 500000,
-                                 .batch_size = 7,
-                                 .solver = mlfs::SolverType::GD,
-                                 .lambda = 1,
-                                 .alpha = 0.5});
+  mlfs::PolynomialRegression model =
+      mlfs::PolynomialRegression(2, {.learning_rate = 0.0001,
+                                     .epochs = 100000,
+                                     .batch_size = 1,
+                                     .solver = mlfs::SolverType::CF,
+                                     .lambda = 0,
+                                     .alpha = 0});
 
   // fit the model on the dataset
   model.fit(data);
 
-  std::cout << "\n"
-            << model.get_weights() << " " << model.get_bias() << std::endl;
+  std::cout << "\n" << model.get_weights() << std::endl;
 }
