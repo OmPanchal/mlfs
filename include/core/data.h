@@ -35,9 +35,7 @@ public:
    * Returns the stored data
    * @return The stored data with the padded ones
    */
-  [[nodiscard]] const RowMatrixXd &get_raw_features() const {
-    return features_;
-  }
+  [[nodiscard]] const RowMatrixXd &get_features() const { return features_; }
 
   /**
    * Returns the target column as a vector
@@ -45,16 +43,8 @@ public:
    */
   [[nodiscard]] const Eigen::VectorXd &get_target() const { return target_; }
 
-  /**
-   * Returns the stored data
-   * @return The stored data without the padded ones
-   */
-  [[nodiscard]] RowMatrixXd get_features() const {
-    return features_.leftCols(features_.cols() - 1);
-  }
-
   friend std::ostream &operator<<(std::ostream &os, const CSVDataset &d) {
-    os << d.get_raw_features();
+    os << d.get_features();
     return os;
   }
 
