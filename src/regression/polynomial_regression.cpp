@@ -1,11 +1,9 @@
 #include "regression/polynomial_regression.h"
+#include "core/random.h"
 #include "core/types.h"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
-
-// TODO: The inner workins of Polynomial Regression is identical to Linear
-//  Regression, should unify these inner workings to a single method
 
 namespace mlfs {
 RowMatrixXd create_vandermonde_matrix(RowMatrixXd x, int degree) {
@@ -34,7 +32,8 @@ PolynomialRegression::PolynomialRegression(
     int degree, PolynomialRegressionOptions options = {})
     : opts_(std::move(options)), degree_(degree) {
 
-  weights_ = Eigen::VectorXd::Random(degree + 1);
+  weights_ = Eigen::VectorXd::NullaryExpr(
+      degree + 1, []() { return Random::uniform(-1.0, 1.0); });
 }
 
 void PolynomialRegression::fit(mlfs::CSVDataset &data) {
@@ -57,7 +56,7 @@ PolynomialRegression::predict(const mlfs::RowMatrixXd &X) const {
 
 Eigen::VectorXd
 PolynomialRegression::predict_(const mlfs::RowMatrixXd &X) const {
-  // Fast predict which will only need to calculate the vandermonde matrix once
+  // Takes the result of the vandermonde matrix
   return X * weights_;
 }
 
@@ -116,9 +115,6 @@ void PolynomialRegression::fit_gd(const mlfs::RowMatrixXd &X,
           (1 - opts_.alpha) * l2_regulariser->gradient(weights_);
 
       Eigen::VectorXd regularisation_grad = l1_grad + l2_grad;
-
-      // remove affect of gradient to the bias
-      regularisation_grad(regularisation_grad.size() - 1) = 0.;
 
       // calculate the gradient
       Eigen::VectorXd dW =
