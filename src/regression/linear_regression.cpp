@@ -18,15 +18,13 @@ LinearRegression::LinearRegression(int feature_size,
   weights_ = Eigen::VectorXd::NullaryExpr(
       feature_size, []() { return Random::uniform(-1.0, 1.0); });
   bias_ = Random::uniform(-1.0, 1.0);
-
-  std::cout << "\n\n PARAMS: " << weights_ << " " << bias_ << "\n\n";
 }
 
 void LinearRegression::fit(mlfs::CSVDataset &dataset) {
   if (opts_.solver == SolverType::GD) {
-    fit_gd(dataset.get_raw_features(), dataset.get_target());
+    fit_gd(dataset.get_features(), dataset.get_target());
   } else if (opts_.solver == SolverType::CF) {
-    fit_closed_form(dataset.get_raw_features(), dataset.get_target());
+    fit_closed_form(dataset.get_features(), dataset.get_target());
   } else {
     throw std::invalid_argument(SOLVER_DOES_NOT_EXIST);
   }
