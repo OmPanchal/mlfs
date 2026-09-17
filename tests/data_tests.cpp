@@ -15,9 +15,9 @@ TEST(DataLoadTest, NumericDataSet) {
   mlfs::CSVLoader loader = mlfs::CSVLoader();
   mlfs::RowMatrixXd data =
       loader
-          .load_csv_to_row_matrix(
-              "/home/om/Programming/C++Sandbox/mlfs/data/numeric_data.csv",
-              "col3")
+          .load_csv_to_row_matrix("/home/om/Programming/C++Sandbox/mlfs/data/"
+                                  "data_tests/numeric_data.csv",
+                                  "col3")
           .get_features();
 
   mlfs::RowMatrixXd output{
@@ -35,9 +35,9 @@ TEST(DataLoadTest, NullNumericDataSet) {
   mlfs::CSVLoader loader = mlfs::CSVLoader();
   mlfs::RowMatrixXd data =
       loader
-          .load_csv_to_row_matrix(
-              "/home/om/Programming/C++Sandbox/mlfs/data/null_numeric_data.csv",
-              "col3")
+          .load_csv_to_row_matrix("/home/om/Programming/C++Sandbox/mlfs/data/"
+                                  "data_tests/null_numeric_data.csv",
+                                  "col3")
           .get_features();
 
   mlfs::RowMatrixXd output{
@@ -55,9 +55,9 @@ TEST(DataLoadTest, NullNumericDataSetWithCustomFallback) {
   mlfs::CSVLoader loader = mlfs::CSVLoader({.null_value_fallback = -4.234});
   mlfs::RowMatrixXd data =
       loader
-          .load_csv_to_row_matrix(
-              "/home/om/Programming/C++Sandbox/mlfs/data/null_numeric_data.csv",
-              "col3")
+          .load_csv_to_row_matrix("/home/om/Programming/C++Sandbox/mlfs/data/"
+                                  "data_tests/null_numeric_data.csv",
+                                  "col3")
           .get_features();
 
   mlfs::RowMatrixXd output{
@@ -83,9 +83,9 @@ TEST(DataLoadTest, MixedDataSetWithOrdinalEncoding) {
 
   mlfs::RowMatrixXd data =
       loader
-          .load_csv_to_row_matrix(
-              "/home/om/Programming/C++Sandbox/mlfs/data/mixed_data.csv",
-              "col4")
+          .load_csv_to_row_matrix("/home/om/Programming/C++Sandbox/mlfs/data/"
+                                  "data_tests/mixed_data.csv",
+                                  "col4")
           .get_features();
 
   mlfs::RowMatrixXd output{
@@ -113,9 +113,9 @@ TEST(DataLoadTest, NullMixedDataSetWithOrdinalEncoding) {
 
   mlfs::RowMatrixXd data =
       loader
-          .load_csv_to_row_matrix(
-              "/home/om/Programming/C++Sandbox/mlfs/data/null_mixed_data.csv",
-              "col4")
+          .load_csv_to_row_matrix("/home/om/Programming/C++Sandbox/mlfs/data/"
+                                  "data_tests/null_mixed_data.csv",
+                                  "col4")
           .get_features();
 
   mlfs::RowMatrixXd output{
@@ -144,9 +144,9 @@ TEST(DataLoadTest, NullMixedDataSetWithOrdinalEncodingWithCustomFallback) {
 
   mlfs::RowMatrixXd data =
       loader
-          .load_csv_to_row_matrix(
-              "/home/om/Programming/C++Sandbox/mlfs/data/null_mixed_data.csv",
-              "col4")
+          .load_csv_to_row_matrix("/home/om/Programming/C++Sandbox/mlfs/data/"
+                                  "data_tests/null_mixed_data.csv",
+                                  "col4")
           .get_features();
 
   mlfs::RowMatrixXd output{
@@ -169,9 +169,9 @@ TEST(DataLoadTest, MixedDataSetWithOneHotEncoding) {
 
   mlfs::RowMatrixXd data =
       loader
-          .load_csv_to_row_matrix(
-              "/home/om/Programming/C++Sandbox/mlfs/data/mixed_data.csv",
-              "col4")
+          .load_csv_to_row_matrix("/home/om/Programming/C++Sandbox/mlfs/data/"
+                                  "data_tests/mixed_data.csv",
+                                  "col4")
           .get_features();
 
   mlfs::RowMatrixXd output{
@@ -198,9 +198,9 @@ TEST(DataLoadTest, NullMixedDataSetWithOneHotEncoding) {
 
   mlfs::RowMatrixXd data =
       loader
-          .load_csv_to_row_matrix(
-              "/home/om/Programming/C++Sandbox/mlfs/data/null_mixed_data.csv",
-              "col4")
+          .load_csv_to_row_matrix("/home/om/Programming/C++Sandbox/mlfs/data/"
+                                  "data_tests/null_mixed_data.csv",
+                                  "col4")
           .get_features();
 
   mlfs::RowMatrixXd output{
