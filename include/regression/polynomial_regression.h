@@ -21,7 +21,7 @@ public:
    * @param feature_size The feature size of the model input
    * @param options The options struct
    */
-  PolynomialRegression(int degree, PolynomialRegressionOptions options);
+  PolynomialRegression(int degree, RegressionOptions options);
   ~PolynomialRegression() = default;
 
   void fit(mlfs::CSVDataset &data) override;
@@ -29,14 +29,15 @@ public:
 
   // Getters
   [[nodiscard]] const Eigen::VectorXd &get_weights() const { return weights_; }
-  [[nodiscard]] const PolynomialRegressionOptions &get_opts() const {
-    return opts_;
-  }
+  [[nodiscard]] const RegressionOptions &get_opts() const { return opts_; }
 
 private:
   Eigen::VectorXd weights_;
   const int degree_;
-  const PolynomialRegressionOptions opts_;
+  const RegressionOptions opts_;
+
+  std::unique_ptr<Loss> loss_ = std::make_unique<MSE>();
+
   const std::unique_ptr<NormRegulariser> l1_regulariser =
       std::make_unique<L1Regulariser>();
   const std::unique_ptr<NormRegulariser> l2_regulariser =

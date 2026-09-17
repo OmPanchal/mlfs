@@ -11,7 +11,7 @@ namespace mlfs {
  * Creates the Linear Regression Model with validated options
  */
 LinearRegression::LinearRegression(int feature_size,
-                                   LinearRegressionOptions options = {})
+                                   RegressionOptions options = {})
     : opts_(std::move(options)) {
   opts_.validate();
 
@@ -91,11 +91,10 @@ void LinearRegression::fit_gd(const mlfs::RowMatrixXd &X,
 
       // Calculate weights and biases' gradient
       Eigen::VectorXd dW =
-          batch_X.transpose() *
-              opts_.loss->gradient(batch_Y, y, batch_Y.rows()) +
+          batch_X.transpose() * loss_->gradient(batch_Y, y, batch_Y.rows()) +
           (opts_.lambda * regularisation_grad);
 
-      double dB = opts_.loss->gradient(batch_Y, y, batch_Y.rows()).sum();
+      double dB = loss_->gradient(batch_Y, y, batch_Y.rows()).sum();
 
       // Update Weights and biases
       weights_ = weights_ - opts_.learning_rate * dW;

@@ -12,14 +12,10 @@ enum SolverType {
   GD  // Gradient Descent
 };
 
-/**
- * Linear Regression Options struct
- */
-struct LinearRegressionOptions {
+struct RegressionOptions {
   double learning_rate = 0.01;
   int epochs = 1000;
   int batch_size = 1;
-  std::unique_ptr<Loss> loss = std::make_unique<MSE>();
   SolverType solver = SolverType::CF;
   double lambda = 0;
   double alpha = 0;
@@ -33,41 +29,6 @@ struct LinearRegressionOptions {
     }
     if (batch_size < 1) {
       throw std::invalid_argument(NON_POSITIVE_BATCH_SIZE);
-    }
-    if (lambda < 0) {
-      throw std::invalid_argument(REGRESSION_NEGATIVE_LAMBDA);
-    }
-    if (alpha < 0 || alpha > 1) {
-      throw std::invalid_argument(REGRESSION_OUT_OF_RANGE_ALPHA);
-    }
-  }
-};
-
-struct PolynomialRegressionOptions {
-  int order = 2;
-  double learning_rate = 0.01;
-  int epochs = 1000;
-  int batch_size = 1;
-  std::unique_ptr<Loss> loss = std::make_unique<MSE>();
-  SolverType solver = SolverType::CF;
-  double lambda = 0;
-  double alpha = 0;
-
-  void validate() const {
-    if (learning_rate <= 0.0) {
-      throw std::invalid_argument(NON_POSITIVE_LEARNING_RATE);
-    }
-    if (epochs <= 0) {
-      throw std::invalid_argument(NON_POSITIVE_EPOCHS);
-    }
-    if (order == 1) {
-      throw std::invalid_argument(POLYNOMIAL_REGRESSION_LINEAR_ORDER);
-    }
-    if (batch_size < 1) {
-      throw std::invalid_argument(NON_POSITIVE_BATCH_SIZE);
-    }
-    if (order <= 0) {
-      throw std::invalid_argument(POLYNOMIAL_REGRESSION_NON_POSITIVE_ORDER);
     }
     if (lambda < 0) {
       throw std::invalid_argument(REGRESSION_NEGATIVE_LAMBDA);

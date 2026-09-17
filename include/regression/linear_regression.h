@@ -13,7 +13,7 @@ public:
    * @param feature_size The feature size of the model input
    * @param options The option struct
    */
-  LinearRegression(int feature_size, LinearRegressionOptions options);
+  LinearRegression(int feature_size, RegressionOptions options);
   ~LinearRegression() = default;
 
   void fit(mlfs::CSVDataset &dataset) override;
@@ -22,14 +22,17 @@ public:
   // Getters
   [[nodiscard]] const Eigen::VectorXd &get_weights() const { return weights_; }
   [[nodiscard]] const double get_bias() const { return bias_; }
-  [[nodiscard]] const LinearRegressionOptions &get_opts() const {
-    return opts_;
-  }
+  [[nodiscard]] const RegressionOptions &get_opts() const { return opts_; }
+
+  void setLoss(std::unique_ptr<Loss> loss) { loss_ = std::move(loss); }
 
 private:
   Eigen::VectorXd weights_;
   double bias_;
-  const LinearRegressionOptions opts_;
+  const RegressionOptions opts_;
+
+  std::unique_ptr<Loss> loss_ = std::make_unique<MSE>();
+
   const std::unique_ptr<NormRegulariser> l1_regulariser =
       std::make_unique<L1Regulariser>();
   const std::unique_ptr<NormRegulariser> l2_regulariser =

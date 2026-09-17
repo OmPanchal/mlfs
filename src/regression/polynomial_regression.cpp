@@ -28,9 +28,16 @@ RowMatrixXd create_vandermonde_matrix(RowMatrixXd x, int degree) {
 /**
  * Creates the Polynomial Regression Model with validated options
  */
-PolynomialRegression::PolynomialRegression(
-    int degree, PolynomialRegressionOptions options = {})
+PolynomialRegression::PolynomialRegression(int degree,
+                                           RegressionOptions options = {})
     : opts_(std::move(options)), degree_(degree) {
+
+  if (degree == 1) {
+    throw std::invalid_argument(POLYNOMIAL_REGRESSION_LINEAR_ORDER);
+  }
+  if (degree <= 0) {
+    throw std::invalid_argument(POLYNOMIAL_REGRESSION_NON_POSITIVE_ORDER);
+  }
 
   weights_ = Eigen::VectorXd::NullaryExpr(
       degree + 1, []() { return Random::uniform(-1.0, 1.0); });
@@ -118,8 +125,7 @@ void PolynomialRegression::fit_gd(const mlfs::RowMatrixXd &X,
 
       // calculate the gradient
       Eigen::VectorXd dW =
-          batch_X.transpose() *
-              opts_.loss->gradient(batch_Y, y, batch_Y.rows()) +
+          batch_X.transpose() * loss_->gradient(batch_Y, y, batch_Y.rows()) +
           (opts_.lambda * regularisation_grad);
 
       weights_ = weights_ - opts_.learning_rate * dW;
